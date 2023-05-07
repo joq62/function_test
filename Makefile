@@ -7,6 +7,7 @@ all:
 	rm -rf rebar.lock;
 	rm -rf  _build/test; # A bugfix in rebar3 or 
 	rebar3 compile;
+	rm -rf _build*;
 	mkdir test_ebin;
 	erlc -I api -I /home/joq62/erlang/infra/api_repo -o test_ebin test/*.erl;
 	rm -rf ebin test_ebin
