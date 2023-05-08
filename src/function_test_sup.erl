@@ -31,8 +31,8 @@ init([]) ->
                  period => 1},
     ChildSpecs = [#{id=>log,
 		    start=>{log,start,[]}},
-		  #{id=>kube,
-		    start=>{kube,start_link,[]}},
+		%  #{id=>kube,
+		%    start=>{kube,start_link,[]}},
 		  #{id=>function_test,
 		    start=>{ft,start_link,[]}}],
     {ok, {SupFlags, ChildSpecs}}.
