@@ -74,12 +74,14 @@ start_orchestrate(ControllerNode,DbEtcdNode,KubeNode)->
 %% @doc
 %% @spec
 %% @end
-%%--------------------------------------------------------------------
+%%-------------------------------------------------------------------- 
 init_test()->
     io:format("Start ~p~n",[{?MODULE,?FUNCTION_NAME}]),
 
     {ok,ControllerNode}=start_controller("c200"),
     {ok,DbEtcdNode,DbETcdApp}=start_provider("dbetcd_appl","c200"),
+
+    ['dbetcd_appl@c200']=rpc:call(DbEtcdNode,sd,get_node,[DbETcdApp],5000),
     {ok,KubeNode,KubeApp}=start_provider("kube_appl","c200"),
     ['dbetcd_appl@c200','kube_appl@c200']=lists:sort(rpc:call(ControllerNode,erlang,nodes,[],5000)),
     ['host_controller@c200','kube_appl@c200']=lists:sort(rpc:call(DbEtcdNode,erlang,nodes,[],5000)),

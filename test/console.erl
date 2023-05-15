@@ -26,8 +26,7 @@
 start()->
    
     ok=setup(),
-
-    ok=check_orchestrate(),
+    ok=check_orchestrate(na),
       
     
     io:format("Test OK !!! ~p~n",[?MODULE]),
@@ -40,15 +39,20 @@ start()->
 %% @spec
 %% @end
 %%--------------------------------------------------------------------
-check_orchestrate()->
-    io:format("Start ~p~n",[{?MODULE,?FUNCTION_NAME}]),
+check_orchestrate(PreviousState)->
+  %  io:format("Start ~p~n",[{PreviousState,?MODULE,?FUNCTION_NAME}]),
 
   %  [{"production",WantedState}]=db_deployment_spec:read_all(),
+    CurrentState=orchestrate:is_wanted_state(),
+    if
+	PreviousState/=CurrentState->
+	    io:format("is_wanted_state  ~p~n",[{CurrentState,time(),?MODULE,?FUNCTION_NAME,?LINE}]);
+	true->
+	    ok
+    end,
     
-    io:format("nodes c200 ~p~n",[{rpc:call(host_controller@c200,erlang,nodes,[],5000),?MODULE,?FUNCTION_NAME,?LINE}]),
-    io:format("nodes c201 ~p~n",[{rpc:call(host_controller@c201,erlang,nodes,[],5000),?MODULE,?FUNCTION_NAME,?LINE}]),
     timer:sleep(20*1000),
-    check_orchestrate(),
+    check_orchestrate(CurrentState),
     
     ok.
 
@@ -57,6 +61,7 @@ check_orchestrate()->
 %% @spec
 %% @end
 %%--------------------------------------------------------------------
+
 
 
 %% --------------------------------------------------------------------
